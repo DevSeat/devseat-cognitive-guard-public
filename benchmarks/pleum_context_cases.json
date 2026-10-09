@@ -1,0 +1,82 @@
+[
+  {
+    "id": "exact-duplicate",
+    "task": "What must not be changed?",
+    "expected_contains": ["public APIs"],
+    "context": [
+      {
+        "key": "rule-primary",
+        "content": "Do not change public APIs.",
+        "required": true,
+        "stable": true,
+        "priority": 100,
+        "source": "repo",
+        "revision": "1"
+      },
+      {
+        "key": "rule-copy",
+        "content": "Do not change public APIs.",
+        "priority": 10
+      },
+      {
+        "key": "noise-a",
+        "content": "Historical note: the old benchmark ran on Tuesday. This fact is irrelevant to the task.",
+        "priority": 1
+      }
+    ]
+  },
+  {
+    "id": "priority-budget",
+    "task": "Which file currently fails and what is the error?",
+    "expected_contains": ["parser.py", "ValueError"],
+    "context": [
+      {
+        "key": "current-error",
+        "content": "parser.py currently fails with ValueError on empty input.",
+        "required": true,
+        "priority": 100
+      },
+      {
+        "key": "old-log-1",
+        "content": "Old build log: documentation generation completed successfully. This is not related to parser.py.",
+        "priority": 5
+      },
+      {
+        "key": "old-log-2",
+        "content": "Old deployment log: staging deployment was healthy. This is not related to the current parser error.",
+        "priority": 4
+      },
+      {
+        "key": "old-log-3",
+        "content": "Old formatting log: markdown formatting completed. No parser failure was recorded here.",
+        "priority": 3
+      }
+    ]
+  },
+  {
+    "id": "required-survival",
+    "task": "What port must the service use?",
+    "expected_contains": ["4317"],
+    "context": [
+      {
+        "key": "service-contract",
+        "content": "The service contract requires port 4317.",
+        "required": true,
+        "priority": 100,
+        "stable": true,
+        "source": "contract",
+        "revision": "7"
+      },
+      {
+        "key": "background-1",
+        "content": "The repository contains several archived experiments that are not part of the current service contract.",
+        "priority": 2
+      },
+      {
+        "key": "background-2",
+        "content": "An old prototype used a different transport, but that prototype is no longer active.",
+        "priority": 1
+      }
+    ]
+  }
+]

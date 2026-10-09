@@ -1,0 +1,226 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:devseat-cognitive-guard:schema:context-v1",
+  "title": "DevSeat Context Bridge v1",
+  "type": "object",
+  "required": [
+    "schema"
+  ],
+  "properties": {
+    "schema": {
+      "const": "devseat.context.v1"
+    },
+    "op": {
+      "enum": [
+        "capabilities",
+        "optimize",
+        "feedback",
+        "policy-summary"
+      ],
+      "default": "optimize"
+    },
+    "request_id": {
+      "type": [
+        "string",
+        "number",
+        "null"
+      ]
+    },
+    "product": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "policy_profile": {
+      "type": "string",
+      "minLength": 1,
+      "default": "default"
+    },
+    "profile": {
+      "type": "object",
+      "properties": {
+        "token_budget": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "char_budget": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "selection_strategy": {
+          "enum": [
+            "priority",
+            "density",
+            "balanced"
+          ]
+        },
+        "delta_context": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "known_context_fingerprints": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "omitted_keys": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "attributed_keys": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      }
+    },
+    "raw_quality_pass": {
+      "type": "boolean"
+    },
+    "optimized_quality_pass": {
+      "type": "boolean"
+    },
+    "context": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "key",
+          "content"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "minLength": 1
+          },
+          "content": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "integer"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "stable": {
+            "type": "boolean"
+          },
+          "source": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "revision": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "state_slot": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "state_version": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "dedup_blocks": {
+            "type": "boolean"
+          },
+          "chunk_mode": {
+            "enum": [
+              "paragraph",
+              "line",
+              null
+            ]
+          },
+          "chunk_target_tokens": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "op": {
+            "const": "optimize"
+          }
+        },
+        "required": [
+          "op"
+        ]
+      },
+      "then": {
+        "required": [
+          "context"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "op": {
+            "const": "feedback"
+          }
+        },
+        "required": [
+          "op"
+        ]
+      },
+      "then": {
+        "required": [
+          "product",
+          "context",
+          "omitted_keys",
+          "raw_quality_pass",
+          "optimized_quality_pass"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "op": {
+            "const": "policy-summary"
+          }
+        },
+        "required": [
+          "op"
+        ]
+      },
+      "then": {
+        "required": [
+          "product"
+        ]
+      }
+    }
+  ],
+  "additionalProperties": false
+}
